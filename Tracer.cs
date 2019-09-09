@@ -12,40 +12,44 @@ namespace Trace
     public class Tracer:ITracer
     {
         private TraceResult _traceResult;
-        private MethodTracer _methodTracer;
+        private Stack<MethodTracer> _unstopped;
+        private MethodTracer _lastStopped;
 
         public Tracer()
         {
-            _traceResult = new TraceResult();
+            _traceResult = null;
+            _unstopped = new Stack<MethodTracer>();
         }
 
         public void StartTrace()
         {
             MethodBase methodBase = new StackTrace().GetFrame(1).GetMethod();
             MethodTracer methodTracer = new MethodTracer(methodBase.ReflectedType.Name, methodBase.Name);
-            _methodTracer = methodTracer;
-            _methodTracer.StartTrace();
+            StartTraceMethod(methodTracer);
             //ThreadResult curThreadResult = _traceResult.AddOrGetThreadResult(Thread.CurrentThread.ManagedThreadId);
             //curThreadResult.StartTracingMethod(methodResult);
         }
 
         public void StopTrace()
         {
-            _methodTracer.StopTrace();
-            //int threadId = Thread.CurrentThread.ManagedThreadId;
-            //try
-            //{
-            //    _traceResult.GetThreadResult(threadId).StopTracingMethod();
-            //}
-            //catch (KeyNotFoundException e)
-            //{
-            //    throw new KeyNotFoundException("Thread #" + threadId.ToString() + " was not traced.");
-            //}
+            _lastStopped = _unstopped.Pop(); //rewrite with unstopped.peek().StopTrace() ?
+            _lastStopped.StopTrace();
+        }
+
+        private void StartTraceMethod(MethodTracer methodTracer)
+        {
+            if (_unstopped.Count > 0)
+            {
+                MethodTracer lastUnstoppedMethodTracer = _unstopped.Peek();
+                lastUnstoppedMethodTracer.AddInner(methodTracer);
+            }
+            methodTracer.StartTrace();
+            _unstopped.Push(methodTracer);
         }
 
         public TraceResult GetTraceResult()
         {
-            return new TraceResult(_methodTracer.ElapsedTime);
+            return new TraceResult(_lastStopped, _lastStopped.ElapsedTime);
         }
     }
 }

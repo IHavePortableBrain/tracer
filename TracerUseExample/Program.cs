@@ -14,7 +14,23 @@ namespace TracerUseExample
         {
             Tracer tracer = new Tracer();
             tracer.StartTrace();
-            Thread.Sleep(300);
+
+            tracer.StartTrace();
+            Thread.Sleep(100);
+            tracer.StopTrace();
+
+            tracer.StartTrace();
+            Thread.Sleep(100);
+            tracer.StartTrace();
+            Thread.Sleep(200);
+            tracer.StopTrace();
+            tracer.StartTrace();
+            tracer.StartTrace();
+            Thread.Sleep(200);
+            tracer.StopTrace();
+            tracer.StopTrace();
+            tracer.StopTrace();
+
             tracer.StopTrace();
             Console.WriteLine(tracer.GetTraceResult().TimeSpan);
             Console.ReadKey();

@@ -9,8 +9,11 @@ namespace Trace
     public class TraceResult
     {
         public TimeSpan TimeSpan;
-        public TraceResult(TimeSpan timeSpan = new TimeSpan())
+        public MethodTracer LastStoppedMethodTracer;
+
+        public TraceResult(MethodTracer methodTracer, TimeSpan timeSpan = new TimeSpan())
         {
+            LastStoppedMethodTracer = methodTracer;
             TimeSpan = timeSpan;
         }
     }
