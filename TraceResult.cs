@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace Tracer
 {
-    class Program
+    public class TraceResult
     {
-        static void Main(string[] args)
-        {
-        }
+
     }
 }

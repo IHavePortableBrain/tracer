@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{D02F668B-699E-4D32-B267-B23C8444DCDD}</ProjectGuid>
+    <ProjectGuid>{53A660D2-EF04-4F73-9AA3-9FE075DE888E}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>tracer</RootNamespace>
-    <AssemblyName>tracer</AssemblyName>
+    <RootNamespace>TracerUseExample</RootNamespace>
+    <AssemblyName>TracerUseExample</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -43,19 +43,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MethodResult.cs" />
-    <Compile Include="ThreadResult.cs" />
-    <Compile Include="Tracer.cs" />
-    <Compile Include="ITracer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TraceResult.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="test\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
