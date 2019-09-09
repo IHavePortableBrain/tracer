@@ -4,12 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Tracer
+namespace Trace
 {
-    class Program
+    class ThreadTracer
     {
-        static void Main(string[] args)
-        {
-        }
+
     }
 }

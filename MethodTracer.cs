@@ -5,13 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Tracer
+namespace Trace
 {
-    class MethodResult
+    public class MethodTracer
     {
         public string ClassName { get; protected set; }
         public string MethodName { get; protected set; }
-
         public TimeSpan ElapsedTime
         {
             get { return _stopwatch.Elapsed; }
@@ -19,7 +18,7 @@ namespace Tracer
 
         private Stopwatch _stopwatch;
 
-        public MethodResult(string className, string methodName)
+        public MethodTracer(string className, string methodName)
         {
             ClassName = className;
             MethodName = methodName;

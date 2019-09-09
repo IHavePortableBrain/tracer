@@ -4,10 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Tracer
+namespace Trace
 {
     public class TraceResult
     {
-
+        public TimeSpan TimeSpan;
+        public TraceResult(TimeSpan timeSpan = new TimeSpan())
+        {
+            TimeSpan = timeSpan;
+        }
     }
 }
