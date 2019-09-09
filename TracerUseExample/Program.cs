@@ -10,29 +10,30 @@ namespace TracerUseExample
 {
     class Program
     {
+        static private Tracer _tracer;
+
+        static void m0()
+        {
+            _tracer.StartTrace();
+            Thread.Sleep(100);
+            m1();
+            _tracer.StopTrace();
+        }
+
+        static void m1()
+        {
+            _tracer.StartTrace();
+            Thread.Sleep(100);
+            _tracer.StopTrace();
+        }
+
         static void Main(string[] args)
         {
-            Tracer tracer = new Tracer();
-            tracer.StartTrace();
-
-            tracer.StartTrace();
-            Thread.Sleep(100);
-            tracer.StopTrace();
-
-            tracer.StartTrace();
-            Thread.Sleep(100);
-            tracer.StartTrace();
-            Thread.Sleep(200);
-            tracer.StopTrace();
-            tracer.StartTrace();
-            tracer.StartTrace();
-            Thread.Sleep(200);
-            tracer.StopTrace();
-            tracer.StopTrace();
-            tracer.StopTrace();
-
-            tracer.StopTrace();
-            Console.WriteLine(tracer.GetTraceResult().TimeSpan);
+            _tracer = new Tracer();
+            _tracer.StartTrace();
+            m0();
+            _tracer.StopTrace();
+            Console.WriteLine(_tracer.GetTraceResult().TimeSpan);
             Console.ReadKey();
         }
     }

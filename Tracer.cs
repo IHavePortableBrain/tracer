@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ namespace Trace
     public class Tracer:ITracer
     {
         private TraceResult _traceResult;
+        private ConcurrentDictionary<int, ThreadTracer> _threadTracers;
         private Stack<MethodTracer> _unstopped;
         private MethodTracer _lastStopped;
 
@@ -19,6 +21,7 @@ namespace Trace
         {
             _traceResult = null;
             _unstopped = new Stack<MethodTracer>();
+            _threadTracers = new ConcurrentDictionary<int, ThreadTracer>();
         }
 
         public void StartTrace()
