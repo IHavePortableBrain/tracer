@@ -14,13 +14,12 @@ namespace Trace
     {
         private TraceResult _traceResult;
         private ConcurrentDictionary<int, ThreadTracer> _threadTracers;
-        private Stack<MethodTracer> _unstopped;
-        private MethodTracer _lastStopped;
+        static private object _locker = new object();
+
 
         public Tracer()
         {
             _traceResult = null;
-            _unstopped = new Stack<MethodTracer>();
             _threadTracers = new ConcurrentDictionary<int, ThreadTracer>();
         }
 
@@ -28,31 +27,32 @@ namespace Trace
         {
             MethodBase methodBase = new StackTrace().GetFrame(1).GetMethod();
             MethodTracer methodTracer = new MethodTracer(methodBase.ReflectedType.Name, methodBase.Name);
-            StartTraceMethod(methodTracer);
-            //ThreadResult curThreadResult = _traceResult.AddOrGetThreadResult(Thread.CurrentThread.ManagedThreadId);
-            //curThreadResult.StartTracingMethod(methodResult);
+            ThreadTracer curThreadTracer = AddOrGetThreadTracer(Thread.CurrentThread.ManagedThreadId);
+            curThreadTracer.StartTraceMethod(methodTracer);
         }
 
         public void StopTrace()
         {
-            _lastStopped = _unstopped.Pop(); //rewrite with unstopped.peek().StopTrace() ?
-            _lastStopped.StopTrace();
+            AddOrGetThreadTracer(Thread.CurrentThread.ManagedThreadId).StopTraceMethod();
         }
 
-        private void StartTraceMethod(MethodTracer methodTracer)
+        private ThreadTracer AddOrGetThreadTracer(int id)
         {
-            if (_unstopped.Count > 0)
+            lock (_locker)
             {
-                MethodTracer lastUnstoppedMethodTracer = _unstopped.Peek();
-                lastUnstoppedMethodTracer.AddInner(methodTracer);
+                ThreadTracer threadTracer;
+                if (!_threadTracers.TryGetValue(id, out threadTracer))
+                {
+                    threadTracer = new ThreadTracer();
+                    _threadTracers[id] = threadTracer;
+                }
+                return threadTracer;
             }
-            methodTracer.StartTrace();
-            _unstopped.Push(methodTracer);
         }
 
         public TraceResult GetTraceResult()
         {
-            return new TraceResult(_lastStopped, _lastStopped.ElapsedTime);
+            return new TraceResult(_threadTracers);//_lastStopped, _lastStopped.ElapsedTime
         }
     }
 }
