@@ -15,16 +15,16 @@ namespace Trace
         {
             get { return _stopwatch.Elapsed; }
         }
-
+        public List<MethodTracer> Inner;
         private Stopwatch _stopwatch;
-        private List<MethodTracer> _inner;
+        
 
         public MethodTracer(string className, string methodName)
         {
             ClassName = className;
             MethodName = methodName;
             _stopwatch = new Stopwatch();
-            _inner = new List<MethodTracer>();
+            Inner = new List<MethodTracer>();
         }
 
         public void StartTrace()
@@ -48,7 +48,7 @@ namespace Trace
 
         public void AddInner(MethodTracer toAdd)
         {
-            _inner.Add(toAdd);
+            Inner.Add(toAdd);
         }
     }
 }

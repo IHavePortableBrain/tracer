@@ -48,7 +48,6 @@ namespace TracerUseExample
             thread2.Start();
             thread1.Join(); // wait all threads terminate
             thread2.Join();
-            Console.WriteLine(_tracer.GetTraceResult().TimeSpan);
         }
     }
 }

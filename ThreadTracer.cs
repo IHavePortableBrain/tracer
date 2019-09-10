@@ -11,7 +11,7 @@ namespace Trace
     public class ThreadTracer
     {
         private Stack<MethodTracer> _unstopped;
-        private MethodTracer _lastStopped;
+        public MethodTracer LastStopped;
 
         public ThreadTracer()
         {
@@ -31,8 +31,8 @@ namespace Trace
 
         internal void StopTraceMethod()
         {
-            _lastStopped = _unstopped.Pop(); //rewrite with unstopped.peek().StopTrace() ? 
-            _lastStopped.StopTrace();
+            LastStopped = _unstopped.Pop(); //rewrite with unstopped.peek().StopTrace() ? 
+            LastStopped.StopTrace();
             //Console.WriteLine("thread " + Thread.CurrentThread.Name + " stops tracing " + _lastStopped.MethodName);
         }
     }
