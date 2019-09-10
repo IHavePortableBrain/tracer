@@ -52,7 +52,8 @@ namespace Trace
 
         public TraceResult GetTraceResult()
         {
-            return new TraceResult(_threadTracers);//_lastStopped, _lastStopped.ElapsedTime
+            _traceResult = new TraceResult(_threadTracers);
+            return _traceResult;//_lastStopped, _lastStopped.ElapsedTime
         }
     }
 }

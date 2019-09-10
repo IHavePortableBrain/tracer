@@ -9,13 +9,11 @@ namespace Trace
 {
     public class TraceResult
     {
-        public TimeSpan TimeSpan;
         public ConcurrentDictionary<int, ThreadTracer> ThreadTracers;
 
-        public TraceResult(ConcurrentDictionary<int, ThreadTracer> threadTracers, TimeSpan timeSpan = new TimeSpan())
+        public TraceResult(ConcurrentDictionary<int, ThreadTracer> threadTracers)
         {
             ThreadTracers = threadTracers;
-            TimeSpan = timeSpan;
         }
     }
 }
