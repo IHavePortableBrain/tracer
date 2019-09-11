@@ -4,18 +4,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Trace;
+using Trace.Saver;
 using System.Threading;
+using System.IO;
 
 namespace TracerUseExample
 {
     class Program
     {
-        static private Tracer _tracer;
+        static private Tracer _tracer = new Tracer();
+        static private Saver _saver = new XMLSaver();
 
         static void DoIT()
         {
             _tracer.StartTrace();
             m0();
+            m1();
             _tracer.StartTrace();
             _tracer.StopTrace();
             _tracer.StopTrace();
@@ -26,6 +30,9 @@ namespace TracerUseExample
             _tracer.StartTrace();
             Thread.Sleep(100);
             m1();
+            _tracer.StartTrace();
+            Thread.Sleep(15);
+            _tracer.StopTrace();
             _tracer.StopTrace();
         }
 
@@ -38,7 +45,6 @@ namespace TracerUseExample
 
         static void Main(string[] args)
         {
-            _tracer = new Tracer();
             Thread thread1 = new Thread(new ThreadStart(DoIT));
             Thread thread2 = new Thread(new ThreadStart(DoIT));
             thread1.Name = "FIRST";
@@ -48,6 +54,16 @@ namespace TracerUseExample
             thread2.Start();
             thread1.Join(); // wait all threads terminate
             thread2.Join();
+            TraceResult traceResult = _tracer.GetTraceResult();
+            FileStream fileStream = new FileStream("test.xml", FileMode.Create);
+            StreamWriter streamWriter = new StreamWriter(fileStream);
+            _saver.SaveTraceResult(streamWriter, traceResult);
+            _saver.SaveTraceResult(Console.Out, traceResult);
+            _saver = new JSONSaver();
+            _saver.SaveTraceResult(Console.Out, traceResult);
+            fileStream = new FileStream("test.json", FileMode.Create);
+            streamWriter = new StreamWriter(fileStream);
+            _saver.SaveTraceResult(streamWriter, traceResult);
         }
     }
 }

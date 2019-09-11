@@ -4,7 +4,7 @@ using System.Threading;
 using System.Collections.Generic;
 using System;
 
-namespace TestTracer
+namespace Trace.Test
 {
     [TestClass]
     public class TestTracer
@@ -15,7 +15,7 @@ namespace TestTracer
 
         public TestTracer()
         {
-            _tracer = new Tracer();
+            _tracer = new Trace.Tracer();
         }
 
         private void TestIsGreater(long greater, long less)

@@ -12,10 +12,12 @@ namespace Trace
     {
         private Stack<MethodTracer> _unstopped;
         public MethodTracer LastStopped;
+        public int threadId;
 
-        public ThreadTracer()
+        public ThreadTracer(int id)
         {
             _unstopped = new Stack<MethodTracer>();
+            threadId = id;
         }
 
         internal void StartTraceMethod(MethodTracer methodTracer)

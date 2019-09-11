@@ -13,7 +13,7 @@ namespace Trace
     public class Tracer:ITracer
     {
         private TraceResult _traceResult;
-        private ConcurrentDictionary<int, ThreadTracer> _threadTracers;
+        private readonly ConcurrentDictionary<int, ThreadTracer> _threadTracers;
         static private object _locker = new object();
 
 
@@ -43,7 +43,7 @@ namespace Trace
                 ThreadTracer threadTracer;
                 if (!_threadTracers.TryGetValue(id, out threadTracer))
                 {
-                    threadTracer = new ThreadTracer();
+                    threadTracer = new ThreadTracer(id);
                     _threadTracers[id] = threadTracer;
                 }
                 return threadTracer;
