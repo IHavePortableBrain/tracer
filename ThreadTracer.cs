@@ -10,14 +10,15 @@ namespace Trace
 {
     public class ThreadTracer
     {
+        public MethodTracer LastStopped { get; private set; }
+        public int ThreadId { get; private set; }
+
         private Stack<MethodTracer> _unstopped;
-        public MethodTracer LastStopped;
-        public int threadId;
 
         public ThreadTracer(int id)
         {
             _unstopped = new Stack<MethodTracer>();
-            threadId = id;
+            ThreadId = id;
         }
 
         internal void StartTraceMethod(MethodTracer methodTracer)
@@ -25,7 +26,7 @@ namespace Trace
             if (_unstopped.Count > 0)
             {
                 MethodTracer lastUnstoppedMethodTracer = _unstopped.Peek();
-                lastUnstoppedMethodTracer.AddInner(methodTracer);
+                lastUnstoppedMethodTracer.Inner.Add(methodTracer);
             }
             methodTracer.StartTrace();
             _unstopped.Push(methodTracer);

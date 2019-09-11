@@ -31,7 +31,7 @@ namespace Trace.Saver
         {
             return new JObject
             {
-                { "id", threadTracer.threadId },
+                { "id", threadTracer.ThreadId },
                 { "time", threadTracer.LastStopped.ElapsedTime.Milliseconds + "ms"},
                 { "methods", SaveMethodTracer(threadTracer.LastStopped) }
             };

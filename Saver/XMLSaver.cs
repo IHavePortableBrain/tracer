@@ -29,7 +29,7 @@ namespace Trace.Saver
         private XElement SaveThreadTracer(ThreadTracer threadTracer)
         {
             return new XElement("thread",
-                new XAttribute("id", threadTracer.threadId),
+                new XAttribute("id", threadTracer.ThreadId),
                 new XAttribute("time", threadTracer.LastStopped.ElapsedTime.Milliseconds + "ms"),
                 SaveMethodTracer(threadTracer.LastStopped)
                 );
@@ -46,7 +46,7 @@ namespace Trace.Saver
                                      select SaveThreadTracer(threadTracer)
                 ));
 
-            using (var xmlWriter = new XmlTextWriter(textWriter))
+            using (XmlTextWriter xmlWriter = new XmlTextWriter(textWriter))
             {
                 xmlWriter.Formatting = Formatting.Indented;
                 doc.WriteTo(xmlWriter);

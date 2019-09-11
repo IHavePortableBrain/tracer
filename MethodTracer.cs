@@ -17,7 +17,6 @@ namespace Trace
         }
         public List<MethodTracer> Inner;
         private Stopwatch _stopwatch;
-        
 
         public MethodTracer(string className, string methodName)
         {
@@ -29,26 +28,12 @@ namespace Trace
 
         public void StartTrace()
         {
-            //if (!_isTraceStarted)
-            //{
-                //method tracing starts, no inner methods traced
-                //_isTraceStarted = true;
-                _stopwatch.Start();
-            //}
-            //else
-            //{
-            //    //method tracing countinue, add inner method tracing
-            //}
+            _stopwatch.Start();
         }
 
         public void StopTrace()
         {
             _stopwatch.Stop();
-        }
-
-        public void AddInner(MethodTracer toAdd)
-        {
-            Inner.Add(toAdd);
         }
     }
 }

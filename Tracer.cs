@@ -16,7 +16,6 @@ namespace Trace
         private readonly ConcurrentDictionary<int, ThreadTracer> _threadTracers;
         static private object _locker = new object();
 
-
         public Tracer()
         {
             _traceResult = null;
@@ -40,8 +39,7 @@ namespace Trace
         {
             lock (_locker)
             {
-                ThreadTracer threadTracer;
-                if (!_threadTracers.TryGetValue(id, out threadTracer))
+                if (!_threadTracers.TryGetValue(id, out ThreadTracer threadTracer))
                 {
                     threadTracer = new ThreadTracer(id);
                     _threadTracers[id] = threadTracer;
@@ -53,7 +51,7 @@ namespace Trace
         public TraceResult GetTraceResult()
         {
             _traceResult = new TraceResult(_threadTracers);
-            return _traceResult;//_lastStopped, _lastStopped.ElapsedTime
+            return _traceResult;
         }
     }
 }
