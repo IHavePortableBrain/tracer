@@ -30,31 +30,9 @@ namespace TestTracer
             _tracer.StopTrace();
         }
 
-        private void MultiThreadedMethod()
-        {
-            var threads = new List<Thread>();
-            Thread newThread;
-            for (int i = 0; i < _threadCount; i++)
-            {
-                newThread = new Thread(SingleThreadedMethod);
-                threads.Add(newThread);
-            }
-            foreach (Thread thread in threads)
-            {
-                thread.Start();
-            }
-            _tracer.StartTrace();
-            Thread.Sleep(_waitTime);
-            _tracer.StopTrace();
-            foreach (Thread thread in threads)
-            {
-                thread.Join();
-            }
-        }
-
         private void CorruptedMethod()
         {
-            Thread.Sleep(100);
+            Thread.Sleep(_waitTime);
             _tracer.StopTrace();
         }
 
@@ -69,9 +47,7 @@ namespace TestTracer
         public void SingleThreadTest()
         {
             // only checks time
-            _tracer.StartTrace();
-            Thread.Sleep(_waitTime);
-            _tracer.StopTrace();
+            SingleThreadedMethod();
             ThreadTracer[] threadTracers = new ThreadTracer[_tracer.GetTraceResult().ThreadTracers.Count];
             _tracer.GetTraceResult().ThreadTracers.Values.CopyTo(threadTracers, 0);
             long actual = threadTracers[0].LastStopped.ElapsedTime.Milliseconds;
