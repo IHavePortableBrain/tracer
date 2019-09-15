@@ -12,40 +12,40 @@ namespace Trace.Saver
 {
     public class JSONSaver:Saver
     {
-        private JToken SaveMethodTracer(MethodTracer methodTracer)
+        private JToken Save(MethodTracerResult methodTracerResult)
         {
             var savedTracedMetod = new JObject
             {
-                { "name", methodTracer.MethodName },
-                { "class", methodTracer.ClassName },
-                { "time", methodTracer.ElapsedTime.Milliseconds + "ms" }
+                { "name", methodTracerResult.MethodName },
+                { "class", methodTracerResult.ClassName },
+                { "time", methodTracerResult.ElapsedTime.Milliseconds + "ms" }
             };
 
-            if (methodTracer.Inner.Any())
-                savedTracedMetod.Add("methods", new JArray(from mt in methodTracer.Inner
-                                                           select SaveMethodTracer(mt)));
+            if (methodTracerResult.Inner.Any())
+                savedTracedMetod.Add("methods", new JArray(from mt in methodTracerResult.Inner
+                                                           select Save(mt)));
             return savedTracedMetod;
         }
 
-        private JToken SaveThreadTracer(ThreadTracer threadTracer)
+        private JToken Save(ThreadTracerResult threadTracerResult)
         {
-            var extremeMethods = from method in threadTracer.ExtremeMethods
-                                 select SaveMethodTracer(method);
+            var extremeMethods = from method in threadTracerResult.ExtremeMethodResults
+                                 select Save(method);
             return new JObject
             {
-                { "id", threadTracer.ThreadId },
-                { "time", threadTracer.TimeElapsed.Milliseconds + "ms"},
+                { "id", threadTracerResult.ThreadId },
+                { "time", threadTracerResult.TimeElapsed.Milliseconds + "ms"},
                 { "methods", new JArray(extremeMethods) }
             };
         }
 
         override public void SaveTraceResult(TextWriter textWriter, TraceResult traceResult)
         {
-            var sortedThreadTracers = from item in traceResult.ThreadTracers
+            var sortedThreadTracerResults = from item in traceResult.ThreadTracerResults
                                       orderby item.Key
                                       select item.Value;
-            var jtokens = from threadTracer in sortedThreadTracers
-                     select SaveThreadTracer(threadTracer);
+            var jtokens = from threadTracerResult in sortedThreadTracerResults
+                     select Save(threadTracerResult);
             JObject traceResultJSON = new JObject
             {
                 { "threads", new JArray(jtokens) }

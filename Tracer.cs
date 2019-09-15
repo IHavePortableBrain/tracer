@@ -18,7 +18,6 @@ namespace Trace
 
         public Tracer()
         {
-            _traceResult = null;
             _threadTracers = new ConcurrentDictionary<int, ThreadTracer>();
         }
 

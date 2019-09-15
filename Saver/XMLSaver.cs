@@ -13,7 +13,7 @@ namespace Trace.Saver
 {
     public class XMLSaver:Saver
     {
-        private XElement SaveMethodTracer(MethodTracer methodTracer)
+        private XElement Save(MethodTracerResult methodTracer)
         {
             var savedTracedMetod = new XElement("method",
                 new XAttribute("name", methodTracer.MethodName),
@@ -22,14 +22,14 @@ namespace Trace.Saver
 
             if (methodTracer.Inner.Any())
                 savedTracedMetod.Add(from innerMethod in methodTracer.Inner
-                                          select SaveMethodTracer(innerMethod));
+                                          select Save(innerMethod));
             return savedTracedMetod;
         }
 
-        private XElement SaveThreadTracer(ThreadTracer threadTracer)
+        private XElement Save(ThreadTracerResult threadTracer)
         {
-            var extremeMethods = from method in threadTracer.ExtremeMethods
-                                 select SaveMethodTracer(method);
+            var extremeMethods = from methodResult in threadTracer.ExtremeMethodResults
+                                 select Save(methodResult);
             return new XElement("thread",
                 new XAttribute("id", threadTracer.ThreadId),
                 new XAttribute("time", threadTracer.TimeElapsed.Milliseconds + "ms"),
@@ -39,13 +39,13 @@ namespace Trace.Saver
 
         override public void SaveTraceResult(TextWriter textWriter, TraceResult traceResult)
         {
-            var sortedThreadTracers = from item in traceResult.ThreadTracers
+            var sortedThreadTracers = from item in traceResult.ThreadTracerResults
                                       orderby item.Key
                                       select item.Value;
 
             XDocument doc = new XDocument(
                 new XElement("root", from threadTracer in sortedThreadTracers
-                                     select SaveThreadTracer(threadTracer)
+                                     select Save(threadTracer)
                 ));
 
             using (XmlTextWriter xmlWriter = new XmlTextWriter(textWriter))

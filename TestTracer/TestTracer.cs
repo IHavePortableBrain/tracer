@@ -51,10 +51,10 @@ namespace Trace.Test
         public void DoubleExtremeMethodTest()
         {
             DoubleExtremeMethod();
-            ThreadTracer[] threadTracers = new ThreadTracer[_tracer.GetTraceResult().ThreadTracers.Count];
+            ThreadTracerResult[] threadTracerResult = new ThreadTracerResult[_tracer.GetTraceResult().ThreadTracerResults.Count];
             //_tracer.GetTraceResult().ThreadTracers.ToList()
-            _tracer.GetTraceResult().ThreadTracers.Values.CopyTo(threadTracers, 0);
-            Assert.AreEqual(threadTracers[0].ExtremeMethods.Count, 2);
+            _tracer.GetTraceResult().ThreadTracerResults.Values.CopyTo(threadTracerResult, 0);
+            Assert.AreEqual(threadTracerResult[0].ExtremeMethodResults.Count, 2);
         }
 
         [TestMethod]
@@ -69,9 +69,9 @@ namespace Trace.Test
         {
             // only checks time
             SingleThreadedMethod();
-            ThreadTracer[] threadTracers = new ThreadTracer[_tracer.GetTraceResult().ThreadTracers.Count];
-            _tracer.GetTraceResult().ThreadTracers.Values.CopyTo(threadTracers, 0);
-            long actual = threadTracers[0].TimeElapsed.Milliseconds;
+            ThreadTracerResult[] threadTracersResults = new ThreadTracerResult[_tracer.GetTraceResult().ThreadTracerResults.Count];
+            _tracer.GetTraceResult().ThreadTracerResults.Values.CopyTo(threadTracersResults, 0);
+            long actual = threadTracersResults[0].TimeElapsed.Milliseconds;
             TestIsGreater(actual, _waitTime);
         }
 
@@ -94,7 +94,7 @@ namespace Trace.Test
                 thread.Join();
             }
             long actual = 0;
-            foreach (KeyValuePair<int, ThreadTracer> keyValuePair in _tracer.GetTraceResult().ThreadTracers)
+            foreach (KeyValuePair<int, ThreadTracerResult> keyValuePair in _tracer.GetTraceResult().ThreadTracerResults)
             {
                 actual += keyValuePair.Value.TimeElapsed.Milliseconds;
             }
@@ -110,16 +110,16 @@ namespace Trace.Test
             SingleThreadedMethod();
             _tracer.StopTrace();
             TraceResult traceResult = _tracer.GetTraceResult();
-            ThreadTracer[] threadTracers = new ThreadTracer[traceResult.ThreadTracers.Count];
-            traceResult.ThreadTracers.Values.CopyTo(threadTracers, 0);
+            ThreadTracerResult[] threadTracerResults = new ThreadTracerResult[traceResult.ThreadTracerResults.Count];
+            traceResult.ThreadTracerResults.Values.CopyTo(threadTracerResults, 0);
 
-            Assert.AreEqual(1, traceResult.ThreadTracers.Count);
-            MethodTracer extremeMt = threadTracers[0].ExtremeMethods[0];
+            Assert.AreEqual(1, traceResult.ThreadTracerResults.Count);
+            MethodTracerResult extremeMt = threadTracerResults[0].ExtremeMethodResults[0];
             Assert.AreEqual(nameof(TestTracer), extremeMt.ClassName); 
             Assert.AreEqual(nameof(InnerMethodTest), extremeMt.MethodName);
             TestIsGreater(extremeMt.ElapsedTime.Milliseconds, _waitTime * 2);
             Assert.AreEqual(1, extremeMt.Inner.Count);
-            MethodTracer internalMt = extremeMt.Inner[0];
+            MethodTracerResult internalMt = extremeMt.Inner[0];
             Assert.AreEqual(nameof(TestTracer), internalMt.ClassName);
             Assert.AreEqual(nameof(SingleThreadedMethod), internalMt.MethodName);
             TestIsGreater(internalMt.ElapsedTime.Milliseconds, _waitTime);

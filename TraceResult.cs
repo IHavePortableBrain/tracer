@@ -9,11 +9,15 @@ namespace Trace
 {
     public class TraceResult
     {
-        public ConcurrentDictionary<int, ThreadTracer> ThreadTracers { get; }
+        public IDictionary<int, ThreadTracerResult> ThreadTracerResults { get; }
 
         public TraceResult(ConcurrentDictionary<int, ThreadTracer> threadTracers)
         {
-            ThreadTracers = threadTracers;
+            ThreadTracerResults = new Dictionary<int, ThreadTracerResult>();
+            foreach (var threadTracer in threadTracers)
+            {
+                ThreadTracerResults[threadTracer.Key] = ThreadTracerResult.GetResult(threadTracer.Value);
+            }
         }
     }
 }

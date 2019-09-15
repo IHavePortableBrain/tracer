@@ -49,11 +49,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MethodTracerResult.cs" />
     <Compile Include="Saver\ISaveTracerResult.cs" />
     <Compile Include="MethodTracer.cs" />
     <Compile Include="Saver\JSONSaver.cs" />
     <Compile Include="Saver\Saver.cs" />
     <Compile Include="ThreadTracer.cs" />
+    <Compile Include="ThreadTracerResult.cs" />
     <Compile Include="Tracer.cs" />
     <Compile Include="ITracer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

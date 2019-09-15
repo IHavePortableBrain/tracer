@@ -12,7 +12,7 @@ namespace Trace
     {
         public List<MethodTracer> ExtremeMethods { get; private set; }
         public int ThreadId { get; private set; }
-        public TimeSpan TimeElapsed;
+        public TimeSpan TimeElapsed { get; private set; }
 
         private Stack<MethodTracer> _unstopped;
 
@@ -43,7 +43,6 @@ namespace Trace
                 ExtremeMethods.Add(lastStopped);
                 TimeElapsed += lastStopped.ElapsedTime;
             }
-            //Console.WriteLine("thread " + Thread.CurrentThread.Name + " stops tracing " + _lastStopped.MethodName);
         }
     }
 }
