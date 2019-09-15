@@ -22,6 +22,10 @@ namespace TracerUseExample
             m1();
             _tracer.StopTrace();
             _tracer.StartTrace();
+            Thread.Sleep(42);
+            _tracer.StopTrace();
+            _tracer.StartTrace();
+            Thread.Sleep(50);
             _tracer.StopTrace();
         }
 

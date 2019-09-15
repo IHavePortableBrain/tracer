@@ -29,11 +29,13 @@ namespace Trace.Saver
 
         private JToken SaveThreadTracer(ThreadTracer threadTracer)
         {
+            var extremeMethods = from method in threadTracer.ExtremeMethods
+                                 select SaveMethodTracer(method);
             return new JObject
             {
                 { "id", threadTracer.ThreadId },
-                { "time", threadTracer.LastStopped.ElapsedTime.Milliseconds + "ms"},
-                { "methods", SaveMethodTracer(threadTracer.LastStopped) }
+                { "time", threadTracer.TimeElapsed.Milliseconds + "ms"},
+                { "methods", new JArray(extremeMethods) }
             };
         }
 

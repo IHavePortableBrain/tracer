@@ -3,6 +3,7 @@ using Trace;
 using System.Threading;
 using System.Collections.Generic;
 using System;
+using System.Linq;
 
 namespace Trace.Test
 {
@@ -35,6 +36,26 @@ namespace Trace.Test
             Thread.Sleep(_waitTime);
             _tracer.StopTrace();
         }
+        
+        private void DoubleExtremeMethod()
+        {
+            _tracer.StartTrace();
+            Thread.Sleep(_waitTime);
+            _tracer.StopTrace();
+            _tracer.StartTrace();
+            Thread.Sleep(_waitTime);
+            _tracer.StopTrace();
+        }
+
+        [TestMethod]
+        public void DoubleExtremeMethodTest()
+        {
+            DoubleExtremeMethod();
+            ThreadTracer[] threadTracers = new ThreadTracer[_tracer.GetTraceResult().ThreadTracers.Count];
+            //_tracer.GetTraceResult().ThreadTracers.ToList()
+            _tracer.GetTraceResult().ThreadTracers.Values.CopyTo(threadTracers, 0);
+            Assert.AreEqual(threadTracers[0].ExtremeMethods.Count, 2);
+        }
 
         [TestMethod]
         public void CorruptionTest()
@@ -50,7 +71,7 @@ namespace Trace.Test
             SingleThreadedMethod();
             ThreadTracer[] threadTracers = new ThreadTracer[_tracer.GetTraceResult().ThreadTracers.Count];
             _tracer.GetTraceResult().ThreadTracers.Values.CopyTo(threadTracers, 0);
-            long actual = threadTracers[0].LastStopped.ElapsedTime.Milliseconds;
+            long actual = threadTracers[0].TimeElapsed.Milliseconds;
             TestIsGreater(actual, _waitTime);
         }
 
@@ -75,7 +96,7 @@ namespace Trace.Test
             long actual = 0;
             foreach (KeyValuePair<int, ThreadTracer> keyValuePair in _tracer.GetTraceResult().ThreadTracers)
             {
-                actual += keyValuePair.Value.LastStopped.ElapsedTime.Milliseconds;
+                actual += keyValuePair.Value.TimeElapsed.Milliseconds;
             }
             TestIsGreater(actual, eachThreadElapsedSum);
         }
@@ -93,7 +114,7 @@ namespace Trace.Test
             traceResult.ThreadTracers.Values.CopyTo(threadTracers, 0);
 
             Assert.AreEqual(1, traceResult.ThreadTracers.Count);
-            MethodTracer extremeMt = threadTracers[0].LastStopped;
+            MethodTracer extremeMt = threadTracers[0].ExtremeMethods[0];
             Assert.AreEqual(nameof(TestTracer), extremeMt.ClassName); 
             Assert.AreEqual(nameof(InnerMethodTest), extremeMt.MethodName);
             TestIsGreater(extremeMt.ElapsedTime.Milliseconds, _waitTime * 2);

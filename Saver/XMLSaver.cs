@@ -28,10 +28,12 @@ namespace Trace.Saver
 
         private XElement SaveThreadTracer(ThreadTracer threadTracer)
         {
+            var extremeMethods = from method in threadTracer.ExtremeMethods
+                                 select SaveMethodTracer(method);
             return new XElement("thread",
                 new XAttribute("id", threadTracer.ThreadId),
-                new XAttribute("time", threadTracer.LastStopped.ElapsedTime.Milliseconds + "ms"),
-                SaveMethodTracer(threadTracer.LastStopped)
+                new XAttribute("time", threadTracer.TimeElapsed.Milliseconds + "ms"),
+                extremeMethods
                 );
         }
 

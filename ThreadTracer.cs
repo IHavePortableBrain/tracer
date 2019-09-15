@@ -10,8 +10,9 @@ namespace Trace
 {
     public class ThreadTracer
     {
-        public MethodTracer LastStopped { get; private set; }
+        public List<MethodTracer> ExtremeMethods { get; private set; }
         public int ThreadId { get; private set; }
+        public TimeSpan TimeElapsed;
 
         private Stack<MethodTracer> _unstopped;
 
@@ -19,6 +20,7 @@ namespace Trace
         {
             _unstopped = new Stack<MethodTracer>();
             ThreadId = id;
+            ExtremeMethods = new List<MethodTracer>();
         }
 
         internal void StartTraceMethod(MethodTracer methodTracer)
@@ -34,8 +36,13 @@ namespace Trace
 
         internal void StopTraceMethod()
         {
-            LastStopped = _unstopped.Pop(); //rewrite with unstopped.peek().StopTrace() ? 
-            LastStopped.StopTrace();
+            MethodTracer lastStopped = _unstopped.Pop(); //rewrite with unstopped.peek().StopTrace() ? 
+            lastStopped.StopTrace();
+            if (!_unstopped.Any())
+            {
+                ExtremeMethods.Add(lastStopped);
+                TimeElapsed += lastStopped.ElapsedTime;
+            }
             //Console.WriteLine("thread " + Thread.CurrentThread.Name + " stops tracing " + _lastStopped.MethodName);
         }
     }
